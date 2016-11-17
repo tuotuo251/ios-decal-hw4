@@ -165,6 +165,7 @@ class PlayerViewController: UIViewController {
      */
     func nextTrackTapped(_ sender: UIButton) {
         // FILL ME IN
+        let didstart = (CMTimeGetSeconds(player.currentTime()) != 0.0)
         let didplay = (player.rate != 0.0)
         if currentIndex == (tracks.count - 1) {
             currentIndex = 0
@@ -173,7 +174,7 @@ class PlayerViewController: UIViewController {
             currentIndex = currentIndex + 1
         }
         loadTrackElements()
-        if didplay{
+        if didstart{
             let path = Bundle.main.path(forResource: "Info", ofType: "plist")
             let clientID = NSDictionary(contentsOfFile: path!)?.value(forKey: "client_id") as! String
             let track = tracks[currentIndex]
@@ -181,7 +182,9 @@ class PlayerViewController: UIViewController {
             let item = AVPlayerItem(url: url)
             player.insert(item, after: nil)
             player.advanceToNextItem()
-            player.play()
+            if didplay {
+                player.play()
+            }
         }
     }
 
